@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import (QApplication, QLabel, QWidget,
                              QCheckBox)
 from PyQt6.QtGui import QFont, QPixmap
 from registrar import RegistrarUsuario
+from main import mainWindow
 
 class Login(QWidget):
     def __init__(self):
@@ -64,11 +65,48 @@ class Login(QWidget):
             self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
     
     def iniciar_main(self):
-        pass
+        usuario = []
+        usuario_text = "usuario.txt"
+
+        try:
+            with open(usuario_text, "r") as z:
+                for linea in z:
+                    usuario.append(linea.strip("\n"))
+            login_informacion = f"{self.user_input.text()},{self.password_input.text()}"
+            if login_informacion in usuario:
+                QMessageBox.information(self,"inicio de sesion",
+                                        "inicio de sesion",
+                                        QMessageBox.StandardButton.Ok,
+                                        QMessageBox.StandardButton.Ok)
+                self.is_logged = True
+                self.close()
+                self.open_main_window()
+            
+            else:
+                QMessageBox.warning(self,"error",
+                                    "credenciales incorrectas",
+                                    QMessageBox.StandardButton.Close,
+                                    QMessageBox.StandardButton.Close)
+
+        except FileNotFoundError as e:
+                QMessageBox.warning(self,"error",
+                                    "usuario no registrado",{e},
+                                    QMessageBox.StandardButton.Close,
+                                    QMessageBox.StandardButton.Close)
+        except Exception as e:
+            QMessageBox.warning(self,"error",
+                                    "error en nose donde",{e},
+                                    QMessageBox.StandardButton.Close,
+                                    QMessageBox.StandardButton.Close)
+
 
     def registrar_usuario(self):
         self.usuario = RegistrarUsuario()
         self.usuario.show()
+
+    def open_main_window(self):
+        self.main_window = mainWindow()
+        self.main_window.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

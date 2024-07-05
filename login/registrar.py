@@ -41,3 +41,51 @@ class RegistrarUsuario(QDialog):
         self.password_2_input.resize(250, 24)
         self.password_2_input.move(90, 100)
         self.password_2_input.setEchoMode(QLineEdit.EchoMode.Password)
+
+        create_button = QPushButton(self)
+        create_button.setText("Crear")
+        create_button.resize(150,32)
+        create_button.move(20,170)
+        create_button.clicked.connect(self.crear_usuario)
+
+        cancel_button = QPushButton(self)
+        cancel_button.setText("Cancelar")
+        cancel_button.resize(150,32)
+        cancel_button.move(170,170)
+        cancel_button.clicked.connect(self.cancelar_usuario)
+
+    def cancelar_usuario(self):
+        self.close()
+    
+    def crear_usuario(self):
+        usuario_text = "usuario.txt"
+        usuario = self.user_input.text()
+        password1 = self.password_input.text()
+        password2 = self.password_2_input.text()
+
+        if password1 == "" or password2 == "" or usuario == "":
+            QMessageBox.warning(self,"error",
+                                "ingrese datos",
+                                QMessageBox.StandardButton.Close,
+                                QMessageBox.StandardButton.Close)
+        elif password1 != password2:
+            QMessageBox.warning(self,"error",
+                                "la contrasenia no es la misma",
+                                QMessageBox.StandardButton.Close,
+                                QMessageBox.StandardButton.Close)
+        else:
+            try:
+                with open(usuario_text,"a+") as f:
+                    f.write(f"{usuario},{password1}\n")
+                QMessageBox.information(self,"creado con exito",
+                                        "el usuario se creo con exito",
+                                        QMessageBox.StandardButton.Ok,
+                                        QMessageBox.StandardButton.Ok)
+                self.close()
+                
+                
+            except FileNotFoundError as e:
+                QMessageBox.warning(self,"error",
+                                    "ingrese datos",{e},
+                                QMessageBox.StandardButton.Close,
+                                QMessageBox.StandardButton.Close)
