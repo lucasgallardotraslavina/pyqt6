@@ -9,7 +9,7 @@ class mainWindow(QWidget):
         self.inicializar_ui()
     
     def inicializar_ui(self):
-        self.setGeometry(100,100,500,500)
+        self.setGeometry(100,100,200,200)
         self.setWindowTitle("ventana principal")
         self.generar_contenido()
 
